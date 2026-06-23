@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- ── Catégories ───────────────────────────────────────────────── -->
+        <record id="cat_poste_travail" model="it.equipment.category">
+            <field name="name">Poste de travail</field>
+        </record>
+        <record id="cat_serveur" model="it.equipment.category">
+            <field name="name">Serveur</field>
+        </record>
+        <record id="cat_imprimante" model="it.equipment.category">
+            <field name="name">Imprimante</field>
+        </record>
+        <record id="cat_reseau" model="it.equipment.category">
+            <field name="name">Équipement réseau</field>
+        </record>
+        <record id="cat_telephone" model="it.equipment.category">
+            <field name="name">Téléphone IP</field>
+        </record>
+
+        <!-- ── Départements ─────────────────────────────────────────────── -->
+        <record id="dep_dsi" model="hr.department">
+            <field name="name">Direction des Systèmes d'Information</field>
+        </record>
+        <record id="dep_compta" model="hr.department">
+            <field name="name">Comptabilité</field>
+        </record>
+        <record id="dep_rh" model="hr.department">
+            <field name="name">Ressources Humaines</field>
+        </record>
+        <record id="dep_commercial" model="hr.department">
+            <field name="name">Commercial</field>
+        </record>
+
+        <!-- ── Employés ──────────────────────────────────────────────────── -->
+        <record id="emp_001" model="hr.employee">
+            <field name="name">Koné Amadou</field>
+            <field name="department_id" ref="dep_dsi"/>
+            <field name="job_title">Directeur DSI</field>
+            <field name="work_email">k.amadou@techparkci.com</field>
+        </record>
+        <record id="emp_002" model="hr.employee">
+            <field name="name">Diallo Fatoumata</field>
+            <field name="department_id" ref="dep_dsi"/>
+            <field name="job_title">Technicienne support</field>
+            <field name="work_email">f.diallo@techparkci.com</field>
+        </record>
+        <record id="emp_003" model="hr.employee">
+            <field name="name">N'Guessan Jean</field>
+            <field name="department_id" ref="dep_compta"/>
+            <field name="job_title">Comptable</field>
+            <field name="work_email">j.nguessan@techparkci.com</field>
+        </record>
+        <record id="emp_004" model="hr.employee">
+            <field name="name">Touré Mariam</field>
+            <field name="department_id" ref="dep_rh"/>
+            <field name="job_title">Responsable RH</field>
+            <field name="work_email">m.toure@techparkci.com</field>
+        </record>
+        <record id="emp_005" model="hr.employee">
+            <field name="name">Bamba Ibrahim</field>
+            <field name="department_id" ref="dep_commercial"/>
+            <field name="job_title">Commercial</field>
+            <field name="work_email">i.bamba@techparkci.com</field>
+        </record>
+
+        <!-- ── Équipements (10) ──────────────────────────────────────────── -->
+        <record id="eq_001" model="it.equipment">
+            <field name="name">PC Dell OptiPlex 7090</field>
+            <field name="serial_number">SN-DELL-001</field>
+            <field name="category_id" ref="cat_poste_travail"/>
+            <field name="brand">Dell</field>
+            <field name="model">OptiPlex 7090</field>
+            <field name="purchase_date">2023-03-15</field>
+            <field name="purchase_price">850000</field>
+            <field name="warranty_date">2026-03-15</field>
+            <field name="location">Abidjan-Cocody - Bureau 101</field>
+            <field name="state">assigned</field>
+            <field name="employee_id" ref="emp_001"/>
+            <field name="department_id" ref="dep_dsi"/>
+        </record>
+
+        <record id="eq_002" model="it.equipment">
+            <field name="name">Laptop HP EliteBook 840</field>
+            <field name="serial_number">SN-HP-002</field>
+            <field name="category_id" ref="cat_poste_travail"/>
+            <field name="brand">HP</field>
+            <field name="model">EliteBook 840 G9</field>
+            <field name="purchase_date">2023-06-01</field>
+            <field name="purchase_price">1200000</field>
+            <field name="warranty_date">2026-06-01</field>
+            <field name="location">Abidjan-Cocody - Bureau 102</field>
+            <field name="state">assigned</field>
+            <field name="employee_id" ref="emp_002"/>
+            <field name="department_id" ref="dep_dsi"/>
+        </record>
+
+        <record id="eq_003" model="it.equipment">
+            <field name="name">Serveur Dell PowerEdge R740</field>
+            <field name="serial_number">SN-SRV-003</field>
+            <field name="category_id" ref="cat_serveur"/>
+            <field name="brand">Dell</field>
+            <field name="model">PowerEdge R740</field>
+            <field name="purchase_date">2022-01-10</field>
+            <field name="purchase_price">4500000</field>
+            <field name="warranty_date">2025-01-10</field>
+            <field name="location">Abidjan-Cocody - Salle serveurs</field>
+            <field name="state">maintenance</field>
+        </record>
+
+        <record id="eq_004" model="it.equipment">
+            <field name="name">Imprimante HP LaserJet Pro</field>
+            <field name="serial_number">SN-IMP-004</field>
+            <field name="category_id" ref="cat_imprimante"/>
+            <field name="brand">HP</field>
+            <field name="model">LaserJet Pro M404dn</field>
+            <field name="purchase_date">2022-09-20</field>
+            <field name="purchase_price">320000</field>
+            <field name="warranty_date">2024-09-20</field>
+            <field name="location">Abidjan-Cocody - Secrétariat</field>
+            <field name="state">assigned</field>
+            <field name="employee_id" ref="emp_003"/>
+            <field name="department_id" ref="dep_compta"/>
+        </record>
+
+        <record id="eq_005" model="it.equipment">
+            <field name="name">Switch Cisco Catalyst 2960</field>
+            <field name="serial_number">SN-NET-005</field>
+            <field name="category_id" ref="cat_reseau"/>
+            <field name="brand">Cisco</field>
+            <field name="model">Catalyst 2960-X</field>
+            <field name="purchase_date">2021-05-15</field>
+            <field name="purchase_price">980000</field>
+            <field name="warranty_date">2024-05-15</field>
+            <field name="location">Abidjan-Cocody - Baie réseau</field>
+            <field name="state">assigned</field>
+        </record>
+
+        <record id="eq_006" model="it.equipment">
+            <field name="name">Téléphone IP Cisco 7841</field>
+            <field name="serial_number">SN-TEL-006</field>
+            <field name="category_id" ref="cat_telephone"/>
+            <field name="brand">Cisco</field>
+            <field name="model">IP Phone 7841</field>
+            <field name="purchase_date">2023-02-01</field>
+            <field name="purchase_price">185000</field>
+            <field name="warranty_date">2026-02-01</field>
+            <field name="location">Abidjan-Cocody - Direction</field>
+            <field name="state">assigned</field>
+            <field name="employee_id" ref="emp_001"/>
+            <field name="department_id" ref="dep_dsi"/>
+        </record>
+
+        <record id="eq_007" model="it.equipment">
+            <field name="name">PC Lenovo ThinkCentre M90q</field>
+            <field name="serial_number">SN-LNV-007</field>
+            <field name="category_id" ref="cat_poste_travail"/>
+            <field name="brand">Lenovo</field>
+            <field name="model">ThinkCentre M90q</field>
+            <field name="purchase_date">2023-08-10</field>
+            <field name="purchase_price">780000</field>
+            <field name="warranty_date">2026-08-10</field>
+            <field name="location">Bouaké - Antenne</field>
+            <field name="state">assigned</field>
+            <field name="employee_id" ref="emp_004"/>
+            <field name="department_id" ref="dep_rh"/>
+        </record>
+
+        <record id="eq_008" model="it.equipment">
+            <field name="name">NAS Synology DS920+</field>
+            <field name="serial_number">SN-NAS-008</field>
+            <field name="category_id" ref="cat_serveur"/>
+            <field name="brand">Synology</field>
+            <field name="model">DiskStation DS920+</field>
+            <field name="purchase_date">2022-11-05</field>
+            <field name="purchase_price">650000</field>
+            <field name="warranty_date">2025-11-05</field>
+            <field name="location">Abidjan-Cocody - Salle serveurs</field>
+            <field name="state">assigned</field>
+        </record>
+
+        <record id="eq_009" model="it.equipment">
+            <field name="name">Laptop Dell XPS 15</field>
+            <field name="serial_number">SN-XPS-009</field>
+            <field name="category_id" ref="cat_poste_travail"/>
+            <field name="brand">Dell</field>
+            <field name="model">XPS 15 9520</field>
+            <field name="purchase_date">2024-01-15</field>
+            <field name="purchase_price">1850000</field>
+            <field name="warranty_date">2027-01-15</field>
+            <field name="location">Abidjan-Cocody - DSI</field>
+            <field name="state">assigned</field>
+            <field name="employee_id" ref="emp_002"/>
+            <field name="department_id" ref="dep_dsi"/>
+        </record>
+
+        <record id="eq_010" model="it.equipment">
+            <field name="name">Routeur Fortinet FortiGate 60F</field>
+            <field name="serial_number">SN-FW-010</field>
+            <field name="category_id" ref="cat_reseau"/>
+            <field name="brand">Fortinet</field>
+            <field name="model">FortiGate 60F</field>
+            <field name="purchase_date">2022-07-20</field>
+            <field name="purchase_price">1200000</field>
+            <field name="warranty_date">2025-07-20</field>
+            <field name="location">Abidjan-Cocody - Baie réseau</field>
+            <field name="state">retired</field>
+        </record>
+
+        <!-- ── Contrats (3) ───────────────────────────────────────────────── -->
+        <record id="contract_001" model="it.contract">
+            <field name="name">Contrat maintenance serveurs Dell</field>
+            <field name="contract_type">maintenance</field>
+            <field name="date_start">2024-01-01</field>
+            <field name="date_end">2026-07-15</field>
+            <field name="amount">2400000</field>
+            <field name="equipment_ids" eval="[(4, ref('eq_003')), (4, ref('eq_008'))]"/>
+        </record>
+
+        <record id="contract_002" model="it.contract">
+            <field name="name">Licence Microsoft 365 Business</field>
+            <field name="contract_type">license</field>
+            <field name="date_start">2025-01-01</field>
+            <field name="date_end">2025-12-31</field>
+            <field name="amount">3600000</field>
+        </record>
+
+        <record id="contract_003" model="it.contract">
+            <field name="name">Support Cisco SmartNet</field>
+            <field name="contract_type">support</field>
+            <field name="date_start">2023-06-01</field>
+            <field name="date_end">2026-08-01</field>
+            <field name="amount">850000</field>
+            <field name="equipment_ids" eval="[(4, ref('eq_005'))]"/>
+        </record>
+
+        <!-- ── Interventions (5) ─────────────────────────────────────────── -->
+        <record id="int_001" model="it.intervention">
+            <field name="equipment_id" ref="eq_003"/>
+            <field name="intervention_type">corrective</field>
+            <field name="date_start">2025-03-10 08:00:00</field>
+            <field name="date_end">2025-03-10 12:00:00</field>
+            <field name="cost">150000</field>
+            <field name="description">Panne RAM - remplacement barrette mémoire 32Go</field>
+            <field name="state">done</field>
+        </record>
+
+        <record id="int_002" model="it.intervention">
+            <field name="equipment_id" ref="eq_004"/>
+            <field name="intervention_type">corrective</field>
+            <field name="date_start">2025-04-05 09:00:00</field>
+            <field name="date_end">2025-04-05 11:00:00</field>
+            <field name="cost">45000</field>
+            <field name="description">Bourrage papier récurrent - nettoyage et calibration</field>
+            <field name="state">done</field>
+        </record>
+
+        <record id="int_003" model="it.intervention">
+            <field name="equipment_id" ref="eq_001"/>
+            <field name="intervention_type">preventive</field>
+            <field name="date_start">2025-05-20 14:00:00</field>
+            <field name="date_end">2025-05-20 15:30:00</field>
+            <field name="cost">25000</field>
+            <field name="description">Nettoyage système, mise à jour pilotes, vérification disque</field>
+            <field name="state">done</field>
+        </record>
+
+        <record id="int_004" model="it.intervention">
+            <field name="equipment_id" ref="eq_005"/>
+            <field name="intervention_type">corrective</field>
+            <field name="date_start">2025-06-01 10:00:00</field>
+            <field name="date_end">2025-06-01 16:00:00</field>
+            <field name="cost">200000</field>
+            <field name="description">Remplacement module SFP défectueux - perte de connectivité VLAN</field>
+            <field name="state">done</field>
+        </record>
+
+        <record id="int_005" model="it.intervention">
+            <field name="equipment_id" ref="eq_003"/>
+            <field name="intervention_type">preventive</field>
+            <field name="date_start">2026-07-10 08:00:00</field>
+            <field name="date_end">2026-07-10 10:00:00</field>
+            <field name="cost">80000</field>
+            <field name="description">Maintenance préventive planifiée - vérification alimentation et ventilation</field>
+            <field name="state">planned</field>
+        </record>
+    </data>
+</odoo>
