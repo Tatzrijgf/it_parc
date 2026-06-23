@@ -1,0 +1,87 @@
+/* ── IT Parc Dashboard Styles ──────────────────────────────────────────── */
+
+.o_it_parc_dashboard {
+    background-color: #f5f7fa;
+    min-height: 100vh;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.o_dashboard_header {
+    background: linear-gradient(135deg, #1F4E79 0%, #2E86AB 100%);
+    color: white;
+    border-radius: 0 0 8px 8px;
+    margin-bottom: 1rem;
+}
+
+.o_dashboard_header h2,
+.o_dashboard_header small {
+    color: white !important;
+}
+
+/* KPI Cards */
+.o_kpi_card {
+    border-radius: 12px !important;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border: 1px solid rgba(0,0,0,0.05) !important;
+}
+
+.o_kpi_card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.12) !important;
+}
+
+.o_kpi_card.cursor-pointer {
+    cursor: pointer;
+}
+
+.o_kpi_icon {
+    transition: transform 0.2s;
+}
+
+.o_kpi_card:hover .o_kpi_icon {
+    transform: scale(1.1);
+}
+
+/* Cards génériques */
+.card {
+    border-radius: 10px !important;
+}
+
+.card-header {
+    border-radius: 10px 10px 0 0 !important;
+    font-weight: 600;
+}
+
+/* Tableaux */
+.table-hover tbody tr:hover {
+    background-color: rgba(31, 78, 121, 0.05);
+    cursor: pointer;
+}
+
+/* SVG Charts */
+svg text {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* Badges dans le tableau */
+.badge {
+    font-size: 0.75rem;
+}
+
+/* Animation de chargement */
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.fa-spin {
+    animation: spin 1s linear infinite;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .o_it_parc_dashboard .col-xl-2 {
+        flex: 0 0 50%;
+        max-width: 50%;
+    }
+}

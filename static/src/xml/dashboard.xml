@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates xml:space="preserve">
+
+<t t-name="it_parc.Dashboard">
+    <div class="o_it_parc_dashboard">
+
+        <!-- ── En-tête ──────────────────────────────────────────────────── -->
+        <div class="o_dashboard_header d-flex align-items-center justify-content-between p-3 mb-3">
+            <div>
+                <h2 class="mb-0">
+                    <i class="fa fa-desktop me-2 text-primary"/>
+                    Tableau de bord — Parc Informatique
+                </h2>
+                <small class="text-muted">TECHPARK CI · DSI</small>
+            </div>
+            <button class="btn btn-outline-primary btn-sm" t-on-click="onRefresh">
+                <i class="fa fa-refresh me-1"/>
+                Actualiser
+            </button>
+        </div>
+
+        <!-- ── Chargement ───────────────────────────────────────────────── -->
+        <t t-if="state.loading">
+            <div class="d-flex justify-content-center align-items-center" style="height:300px">
+                <div class="text-center text-muted">
+                    <i class="fa fa-spinner fa-spin fa-3x mb-3"/>
+                    <p>Chargement des données...</p>
+                </div>
+            </div>
+        </t>
+
+        <!-- ── Erreur ────────────────────────────────────────────────────── -->
+        <t t-elif="state.error">
+            <div class="alert alert-danger m-3">
+                <i class="fa fa-exclamation-triangle me-2"/>
+                <t t-esc="state.error"/>
+            </div>
+        </t>
+
+        <!-- ── Contenu principal ─────────────────────────────────────────── -->
+        <t t-else="">
+
+            <!-- ── KPIs Ligne 1 : Équipements ─────────────────────────── -->
+            <div class="row g-3 px-3 mb-3">
+
+                <!-- Total équipements -->
+                <div class="col-xl-2 col-lg-4 col-md-6">
+                    <div class="o_kpi_card card border-0 shadow-sm h-100 cursor-pointer"
+                         t-on-click="() => this.openEquipments()">
+                        <div class="card-body text-center py-3">
+                            <div class="o_kpi_icon bg-primary bg-opacity-10 rounded-circle d-inline-flex
+                                        align-items-center justify-content-center mb-2"
+                                 style="width:50px;height:50px">
+                                <i class="fa fa-desktop fa-lg text-primary"/>
+                            </div>
+                            <h3 class="mb-0 fw-bold text-primary">
+                                <t t-esc="state.kpis.total_equipment || 0"/>
+                            </h3>
+                            <small class="text-muted">Total équipements</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Affectés -->
+                <div class="col-xl-2 col-lg-4 col-md-6">
+                    <div class="o_kpi_card card border-0 shadow-sm h-100 cursor-pointer"
+                         t-on-click="() => this.openEquipments('assigned')">
+                        <div class="card-body text-center py-3">
+                            <div class="o_kpi_icon bg-success bg-opacity-10 rounded-circle d-inline-flex
+                                        align-items-center justify-content-center mb-2"
+                                 style="width:50px;height:50px">
+                                <i class="fa fa-check-circle fa-lg text-success"/>
+                            </div>
+                            <h3 class="mb-0 fw-bold text-success">
+                                <t t-esc="state.kpis.assigned_count || 0"/>
+                            </h3>
+                            <small class="text-muted">Affectés</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- En maintenance -->
+                <div class="col-xl-2 col-lg-4 col-md-6">
+                    <div class="o_kpi_card card border-0 shadow-sm h-100 cursor-pointer"
+                         t-on-click="() => this.openEquipments('maintenance')">
+                        <div class="card-body text-center py-3">
+                            <div class="o_kpi_icon bg-warning bg-opacity-10 rounded-circle d-inline-flex
+                                        align-items-center justify-content-center mb-2"
+                                 style="width:50px;height:50px">
+                                <i class="fa fa-wrench fa-lg text-warning"/>
+                            </div>
+                            <h3 class="mb-0 fw-bold text-warning">
+                                <t t-esc="state.kpis.maintenance_count || 0"/>
+                            </h3>
+                            <small class="text-muted">En maintenance</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Alertes ouvertes -->
+                <div class="col-xl-2 col-lg-4 col-md-6">
+                    <div class="o_kpi_card card border-0 shadow-sm h-100 cursor-pointer"
+                         t-on-click="openAlerts">
+                        <div class="card-body text-center py-3">
+                            <div class="o_kpi_icon bg-danger bg-opacity-10 rounded-circle d-inline-flex
+                                        align-items-center justify-content-center mb-2"
+                                 style="width:50px;height:50px">
+                                <i class="fa fa-bell fa-lg text-danger"/>
+                            </div>
+                            <h3 class="mb-0 fw-bold text-danger">
+                                <t t-esc="state.kpis.open_alerts || 0"/>
+                            </h3>
+                            <small class="text-muted">Alertes ouvertes</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contrats expirant -->
+                <div class="col-xl-2 col-lg-4 col-md-6">
+                    <div class="o_kpi_card card border-0 shadow-sm h-100 cursor-pointer"
+                         t-on-click="openExpiringContracts">
+                        <div class="card-body text-center py-3">
+                            <div class="o_kpi_icon bg-info bg-opacity-10 rounded-circle d-inline-flex
+                                        align-items-center justify-content-center mb-2"
+                                 style="width:50px;height:50px">
+                                <i class="fa fa-file-text fa-lg text-info"/>
+                            </div>
+                            <h3 class="mb-0 fw-bold text-info">
+                                <t t-esc="state.kpis.expiring_contracts || 0"/>
+                            </h3>
+                            <small class="text-muted">Contrats &lt; 30j</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Coût total maintenance -->
+                <div class="col-xl-2 col-lg-4 col-md-6">
+                    <div class="o_kpi_card card border-0 shadow-sm h-100 cursor-pointer"
+                         t-on-click="openInterventions">
+                        <div class="card-body text-center py-3">
+                            <div class="o_kpi_icon bg-secondary bg-opacity-10 rounded-circle d-inline-flex
+                                        align-items-center justify-content-center mb-2"
+                                 style="width:50px;height:50px">
+                                <i class="fa fa-money fa-lg text-secondary"/>
+                            </div>
+                            <h3 class="mb-0 fw-bold text-secondary" style="font-size:1.1rem">
+                                <t t-esc="(state.kpis.total_maintenance_cost || 0).toLocaleString('fr-FR')"/>
+                                <small class="fs-6"> FCFA</small>
+                            </h3>
+                            <small class="text-muted">Coût total maint.</small>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- ── Graphiques ─────────────────────────────────────────── -->
+            <div class="row g-3 px-3 mb-3">
+
+                <!-- Camembert : répartition par catégorie -->
+                <div class="col-lg-5">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-header bg-white border-bottom">
+                            <h6 class="mb-0 text-primary">
+                                <i class="fa fa-pie-chart me-2"/>
+                                Répartition par catégorie
+                            </h6>
+                        </div>
+                        <div class="card-body d-flex justify-content-center align-items-center">
+                            <svg t-ref="pieChart"
+                                 width="480" height="230"
+                                 viewBox="0 0 480 230"/>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Barres : coûts mensuels maintenance -->
+                <div class="col-lg-7">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-header bg-white border-bottom">
+                            <h6 class="mb-0 text-primary">
+                                <i class="fa fa-bar-chart me-2"/>
+                                Coûts de maintenance (6 derniers mois)
+                            </h6>
+                        </div>
+                        <div class="card-body d-flex justify-content-center align-items-center">
+                            <svg t-ref="barChart"
+                                 width="520" height="200"
+                                 viewBox="0 0 520 200"/>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- ── Ligne 3 : Top équipements + Alertes résumé ───────── -->
+            <div class="row g-3 px-3 mb-3">
+
+                <!-- Top 5 équipements coûteux -->
+                <div class="col-lg-7">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-white border-bottom">
+                            <h6 class="mb-0 text-primary">
+                                <i class="fa fa-trophy me-2"/>
+                                Top équipements (coût maintenance)
+                            </h6>
+                        </div>
+                        <div class="card-body p-0">
+                            <t t-if="state.top_equipments.length === 0">
+                                <p class="text-muted text-center py-3">Aucune donnée disponible</p>
+                            </t>
+                            <t t-else="">
+                                <table class="table table-sm table-hover mb-0">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Équipement</th>
+                                            <th>Référence</th>
+                                            <th class="text-end">Coût (FCFA)</th>
+                                            <th class="text-center">Interventions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="state.top_equipments" t-as="eq" t-key="eq_index">
+                                            <tr>
+                                                <td>
+                                                    <span t-att-class="eq_index === 0 ? 'badge bg-warning' : 'badge bg-secondary'">
+                                                        <t t-esc="eq_index + 1"/>
+                                                    </span>
+                                                </td>
+                                                <td><t t-esc="eq.name"/></td>
+                                                <td><code><t t-esc="eq.reference"/></code></td>
+                                                <td class="text-end fw-bold text-danger">
+                                                    <t t-esc="eq.cost.toLocaleString('fr-FR')"/>
+                                                </td>
+                                                <td class="text-center">
+                                                    <span class="badge bg-info">
+                                                        <t t-esc="eq.interventions"/>
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                </table>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Résumé alertes -->
+                <div class="col-lg-5">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-header bg-white border-bottom">
+                            <h6 class="mb-0 text-primary">
+                                <i class="fa fa-bell me-2"/>
+                                Résumé des alertes
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-flex align-items-center justify-content-between p-2 mb-2 rounded"
+                                 style="background:#fff3cd; cursor:pointer"
+                                 t-on-click="openAlerts">
+                                <div>
+                                    <i class="fa fa-shield me-2 text-warning"/>
+                                    <span>Alertes garanties</span>
+                                </div>
+                                <span class="badge bg-warning fs-6">
+                                    <t t-esc="state.kpis.warranty_alerts || 0"/>
+                                </span>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-between p-2 mb-2 rounded"
+                                 style="background:#f8d7da; cursor:pointer"
+                                 t-on-click="openAlerts">
+                                <div>
+                                    <i class="fa fa-file-text me-2 text-danger"/>
+                                    <span>Alertes contrats</span>
+                                </div>
+                                <span class="badge bg-danger fs-6">
+                                    <t t-esc="state.kpis.contract_alerts || 0"/>
+                                </span>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-between p-2 mb-2 rounded"
+                                 style="background:#d1ecf1; cursor:pointer"
+                                 t-on-click="openInterventions">
+                                <div>
+                                    <i class="fa fa-wrench me-2 text-info"/>
+                                    <span>Interventions ce mois</span>
+                                </div>
+                                <span class="badge bg-info fs-6">
+                                    <t t-esc="state.kpis.interventions_this_month || 0"/>
+                                </span>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-between p-2 rounded"
+                                 style="background:#d4edda; cursor:pointer"
+                                 t-on-click="() => this.openEquipments('retired')">
+                                <div>
+                                    <i class="fa fa-trash me-2 text-secondary"/>
+                                    <span>Équipements retirés</span>
+                                </div>
+                                <span class="badge bg-secondary fs-6">
+                                    <t t-esc="state.kpis.retired_count || 0"/>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </t>
+    </div>
+</t>
+
+</templates>
