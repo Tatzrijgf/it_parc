@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Action rapport fiche équipement -->
+    <record id="action_report_it_equipment" model="ir.actions.report">
+        <field name="name">Fiche équipement</field>
+        <field name="model">it.equipment</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">it_parc.report_it_equipment_template</field>
+        <field name="report_file">it_parc.report_it_equipment_template</field>
+        <field name="binding_model_id" ref="model_it_equipment"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="base.paperformat_euro"/>
+    </record>
+
+    <!-- Template QWeb fiche équipement -->
+    <template id="report_it_equipment_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="eq">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <!-- En-tête -->
+                        <div class="row mb-4">
+                            <div class="col-8">
+                                <h2 class="text-primary">
+                                    <i class="fa fa-desktop"/> Fiche Équipement
+                                </h2>
+                                <h3><t t-esc="eq.name"/></h3>
+                                <p class="text-muted">
+                                    Référence : <strong><t t-esc="eq.reference"/></strong>
+                                </p>
+                            </div>
+                            <div class="col-4 text-end">
+                                <t t-if="eq.state == 'assigned'">
+                                    <span class="badge bg-success fs-6">Affecté</span>
+                                </t>
+                                <t t-elif="eq.state == 'maintenance'">
+                                    <span class="badge bg-warning fs-6">En maintenance</span>
+                                </t>
+                                <t t-elif="eq.state == 'retired'">
+                                    <span class="badge bg-danger fs-6">Retiré</span>
+                                </t>
+                                <t t-else="">
+                                    <span class="badge bg-secondary fs-6">Brouillon</span>
+                                </t>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <!-- Identification -->
+                            <div class="col-6">
+                                <table class="table table-sm table-bordered">
+                                    <thead class="table-primary">
+                                        <tr><th colspan="2">Identification</th></tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><strong>Catégorie</strong></td>
+                                            <td><t t-esc="eq.category_id.name or '-'"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Marque</strong></td>
+                                            <td><t t-esc="eq.brand or '-'"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Modèle</strong></td>
+                                            <td><t t-esc="eq.model or '-'"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>N° de série</strong></td>
+                                            <td><t t-esc="eq.serial_number or '-'"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Localisation</strong></td>
+                                            <td><t t-esc="eq.location or '-'"/></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <!-- Acquisition & Garantie -->
+                            <div class="col-6">
+                                <table class="table table-sm table-bordered">
+                                    <thead class="table-info">
+                                        <tr><th colspan="2">Acquisition &amp; Garantie</th></tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><strong>Date d'achat</strong></td>
+                                            <td>
+                                                <t t-if="eq.purchase_date">
+                                                    <t t-esc="eq.purchase_date" t-options='{"widget":"date"}'/>
+                                                </t>
+                                                <t t-else="">-</t>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Valeur d'achat</strong></td>
+                                            <td>
+                                                <t t-esc="'{:,.0f}'.format(eq.purchase_price)"/> FCFA
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Fournisseur</strong></td>
+                                            <td><t t-esc="eq.supplier_id.name or '-'"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Fin de garantie</strong></td>
+                                            <td>
+                                                <t t-if="eq.warranty_date">
+                                                    <span t-att-class="'text-danger' if eq.warranty_expired else ('text-warning' if eq.warranty_days_left &lt;= 30 else '')">
+                                                        <t t-esc="eq.warranty_date" t-options='{"widget":"date"}'/>
+                                                        (<t t-esc="eq.warranty_days_left"/> j)
+                                                    </span>
+                                                </t>
+                                                <t t-else="">-</t>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Coût maintenance</strong></td>
+                                            <td>
+                                                <t t-esc="'{:,.0f}'.format(eq.total_maintenance_cost)"/> FCFA
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Affectation -->
+                        <div class="row mt-2">
+                            <div class="col-12">
+                                <table class="table table-sm table-bordered">
+                                    <thead class="table-success">
+                                        <tr><th colspan="3">Affectation actuelle</th></tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><strong>Employé</strong></td>
+                                            <td><t t-esc="eq.employee_id.name or '-'"/></td>
+                                            <td><strong>Département</strong> :
+                                                <t t-esc="eq.department_id.name or '-'"/>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Historique des interventions -->
+                        <t t-if="eq.intervention_ids">
+                            <div class="row mt-3">
+                                <div class="col-12">
+                                    <h5 class="text-secondary">Historique des interventions</h5>
+                                    <table class="table table-sm table-striped table-bordered">
+                                        <thead class="table-secondary">
+                                            <tr>
+                                                <th>Référence</th>
+                                                <th>Type</th>
+                                                <th>Date début</th>
+                                                <th>Durée (h)</th>
+                                                <th>Coût (FCFA)</th>
+                                                <th>Statut</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr t-foreach="eq.intervention_ids" t-as="inter">
+                                                <td><t t-esc="inter.name"/></td>
+                                                <td><t t-esc="inter.intervention_type"/></td>
+                                                <td>
+                                                    <t t-esc="inter.date_start"
+                                                       t-options='{"widget":"datetime"}'/>
+                                                </td>
+                                                <td><t t-esc="'%.1f' % inter.duration"/></td>
+                                                <td><t t-esc="'{:,.0f}'.format(inter.cost)"/></td>
+                                                <td><t t-esc="inter.state"/></td>
+                                            </tr>
+                                        </tbody>
+                                        <tfoot>
+                                            <tr class="table-info">
+                                                <td colspan="4"><strong>Total</strong></td>
+                                                <td>
+                                                    <strong>
+                                                        <t t-esc="'{:,.0f}'.format(eq.total_maintenance_cost)"/>
+                                                        FCFA
+                                                    </strong>
+                                                </td>
+                                                <td></td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                        </t>
+
+                        <!-- Pied de page -->
+                        <div class="row mt-4">
+                            <div class="col-12 text-muted small">
+                                <p>
+                                    Document généré le
+                                    <t t-esc="context_timestamp(datetime.now()).strftime('%d/%m/%Y à %H:%M')"/>
+                                    — TECHPARK CI — DSI
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

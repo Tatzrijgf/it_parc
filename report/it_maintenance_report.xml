@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Action rapport maintenance -->
+    <record id="action_report_it_maintenance" model="ir.actions.report">
+        <field name="name">Rapport de maintenance</field>
+        <field name="model">it.intervention</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">it_parc.report_it_maintenance_template</field>
+        <field name="report_file">it_parc.report_it_maintenance_template</field>
+        <field name="binding_model_id" ref="model_it_intervention"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="base.paperformat_euro"/>
+    </record>
+
+    <template id="report_it_maintenance_template">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <h2 class="text-center text-primary mb-3">
+                        Rapport des interventions de maintenance
+                    </h2>
+                    <p class="text-center text-muted">
+                        TECHPARK CI — Généré le
+                        <t t-esc="context_timestamp(datetime.now()).strftime('%d/%m/%Y')"/>
+                    </p>
+
+                    <!-- Résumé -->
+                    <div class="row mb-3">
+                        <div class="col-4">
+                            <div class="card text-center bg-info text-white">
+                                <div class="card-body py-2">
+                                    <h4><t t-esc="len(docs)"/></h4>
+                                    <small>Total interventions</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="card text-center bg-success text-white">
+                                <div class="card-body py-2">
+                                    <h4><t t-esc="len(docs.filtered(lambda i: i.state == 'done'))"/></h4>
+                                    <small>Terminées</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="card text-center bg-danger text-white">
+                                <div class="card-body py-2">
+                                    <h4>
+                                        <t t-esc="'{:,.0f}'.format(sum(docs.mapped('cost')))"/> FCFA
+                                    </h4>
+                                    <small>Coût total</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <table class="table table-sm table-striped table-bordered">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>N° Intervention</th>
+                                <th>Équipement</th>
+                                <th>Type</th>
+                                <th>Technicien</th>
+                                <th>Date début</th>
+                                <th>Date fin</th>
+                                <th>Durée (h)</th>
+                                <th>Coût (FCFA)</th>
+                                <th>Statut</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="docs" t-as="inter">
+                                <td><t t-esc="inter.name"/></td>
+                                <td><t t-esc="inter.equipment_id.name"/></td>
+                                <td>
+                                    <t t-if="inter.intervention_type == 'corrective'">
+                                        <span class="badge bg-danger">Corrective</span>
+                                    </t>
+                                    <t t-else="">
+                                        <span class="badge bg-info">Préventive</span>
+                                    </t>
+                                </td>
+                                <td><t t-esc="inter.technician_id.name or '-'"/></td>
+                                <td>
+                                    <t t-if="inter.date_start">
+                                        <t t-esc="inter.date_start" t-options='{"widget":"datetime"}'/>
+                                    </t>
+                                </td>
+                                <td>
+                                    <t t-if="inter.date_end">
+                                        <t t-esc="inter.date_end" t-options='{"widget":"datetime"}'/>
+                                    </t>
+                                </td>
+                                <td class="text-center"><t t-esc="'%.1f' % inter.duration"/></td>
+                                <td class="text-end"><t t-esc="'{:,.0f}'.format(inter.cost)"/></td>
+                                <td>
+                                    <t t-if="inter.state == 'done'">
+                                        <span class="badge bg-success">Terminée</span>
+                                    </t>
+                                    <t t-elif="inter.state == 'in_progress'">
+                                        <span class="badge bg-warning">En cours</span>
+                                    </t>
+                                    <t t-elif="inter.state == 'planned'">
+                                        <span class="badge bg-info">Planifiée</span>
+                                    </t>
+                                    <t t-else="">
+                                        <span class="badge bg-secondary">Annulée</span>
+                                    </t>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr class="table-primary">
+                                <td colspan="6"><strong>TOTAL</strong></td>
+                                <td class="text-center">
+                                    <strong><t t-esc="'%.1f' % sum(docs.mapped('duration'))"/></strong>
+                                </td>
+                                <td class="text-end">
+                                    <strong>
+                                        <t t-esc="'{:,.0f}'.format(sum(docs.mapped('cost')))"/> FCFA
+                                    </strong>
+                                </td>
+                                <td></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

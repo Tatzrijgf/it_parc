@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Action rapport inventaire -->
+    <record id="action_report_it_inventory" model="ir.actions.report">
+        <field name="name">Rapport d'inventaire</field>
+        <field name="model">it.equipment</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">it_parc.report_it_inventory_template</field>
+        <field name="report_file">it_parc.report_it_inventory_template</field>
+        <field name="binding_model_id" ref="model_it_equipment"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="base.paperformat_euro"/>
+    </record>
+
+    <!-- Template QWeb inventaire -->
+    <template id="report_it_inventory_template">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <h2 class="text-center text-primary mb-4">
+                        Rapport d'inventaire du parc informatique
+                    </h2>
+                    <p class="text-muted text-center">
+                        TECHPARK CI — Généré le
+                        <t t-esc="context_timestamp(datetime.now()).strftime('%d/%m/%Y')"/>
+                    </p>
+
+                    <div class="row mb-3">
+                        <div class="col-3">
+                            <div class="card text-center bg-primary text-white">
+                                <div class="card-body py-2">
+                                    <h4><t t-esc="len(docs)"/></h4>
+                                    <small>Total équipements</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="card text-center bg-success text-white">
+                                <div class="card-body py-2">
+                                    <h4><t t-esc="len(docs.filtered(lambda e: e.state == 'assigned'))"/></h4>
+                                    <small>Affectés</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="card text-center bg-warning text-white">
+                                <div class="card-body py-2">
+                                    <h4><t t-esc="len(docs.filtered(lambda e: e.state == 'maintenance'))"/></h4>
+                                    <small>En maintenance</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="card text-center bg-danger text-white">
+                                <div class="card-body py-2">
+                                    <h4><t t-esc="len(docs.filtered(lambda e: e.warranty_expired))"/></h4>
+                                    <small>Garanties expirées</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <table class="table table-sm table-striped table-bordered">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Référence</th>
+                                <th>Désignation</th>
+                                <th>Catégorie</th>
+                                <th>N° Série</th>
+                                <th>État</th>
+                                <th>Employé</th>
+                                <th>Département</th>
+                                <th>Localisation</th>
+                                <th>Fin garantie</th>
+                                <th>Valeur (FCFA)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="docs" t-as="eq"
+                                t-att-class="'table-danger' if eq.warranty_expired else ('table-warning' if eq.warranty_days_left &lt;= 30 else '')">
+                                <td><t t-esc="eq.reference"/></td>
+                                <td><t t-esc="eq.name"/></td>
+                                <td><t t-esc="eq.category_id.name or '-'"/></td>
+                                <td><t t-esc="eq.serial_number or '-'"/></td>
+                                <td>
+                                    <t t-if="eq.state == 'assigned'">
+                                        <span class="badge bg-success">Affecté</span>
+                                    </t>
+                                    <t t-elif="eq.state == 'maintenance'">
+                                        <span class="badge bg-warning">Maintenance</span>
+                                    </t>
+                                    <t t-elif="eq.state == 'retired'">
+                                        <span class="badge bg-secondary">Retiré</span>
+                                    </t>
+                                    <t t-else="">
+                                        <span class="badge bg-light text-dark">Brouillon</span>
+                                    </t>
+                                </td>
+                                <td><t t-esc="eq.employee_id.name or '-'"/></td>
+                                <td><t t-esc="eq.department_id.name or '-'"/></td>
+                                <td><t t-esc="eq.location or '-'"/></td>
+                                <td>
+                                    <t t-if="eq.warranty_date">
+                                        <t t-esc="eq.warranty_date" t-options='{"widget":"date"}'/>
+                                    </t>
+                                    <t t-else="">-</t>
+                                </td>
+                                <td class="text-end">
+                                    <t t-esc="'{:,.0f}'.format(eq.purchase_price)"/>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr class="table-primary">
+                                <td colspan="9"><strong>TOTAL</strong></td>
+                                <td class="text-end">
+                                    <strong>
+                                        <t t-esc="'{:,.0f}'.format(sum(docs.mapped('purchase_price')))"/>
+                                        FCFA
+                                    </strong>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+
+                    <div class="mt-3">
+                        <small class="text-muted">
+                            <span class="badge bg-danger me-1"> </span> Garantie expirée
+                            <span class="badge bg-warning ms-2 me-1"> </span> Garantie &lt; 30 jours
+                        </small>
+                    </div>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>
