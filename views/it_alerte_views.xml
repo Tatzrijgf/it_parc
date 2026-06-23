@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_it_alerte_list" model="ir.ui.view">
+        <field name="name">it.alerte.list</field>
+        <field name="model">it.alerte</field>
+        <field name="arch" type="xml">
+            <list string="Alertes"
+                  decoration-danger="days_left &lt; 0"
+                  decoration-warning="days_left &lt;= 15 and days_left &gt;= 0"
+                  decoration-muted="state == 'closed'">
+                <field name="name"/>
+                <field name="alerte_type" widget="badge"/>
+                <field name="equipment_id" optional="show"/>
+                <field name="contract_id" optional="show"/>
+                <field name="date_echeance"/>
+                <field name="days_left"/>
+                <field name="threshold_days" optional="hide"/>
+                <field name="state" widget="badge"
+                    decoration-danger="state == 'open'"
+                    decoration-warning="state == 'acknowledged'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_it_alerte_form" model="ir.ui.view">
+        <field name="name">it.alerte.form</field>
+        <field name="model">it.alerte</field>
+        <field name="arch" type="xml">
+            <form string="Alerte">
+                <header>
+                    <button name="action_acknowledge" string="Prendre en compte"
+                            type="object" class="btn-warning"
+                            invisible="state != 'open'"/>
+                    <button name="action_close" string="Fermer l'alerte"
+                            type="object" class="btn-secondary"
+                            invisible="state == 'closed'"/>
+                    <button name="action_reopen" string="Rouvrir"
+                            type="object"
+                            invisible="state != 'closed'"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="open,acknowledged,closed"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="alerte_type"/>
+                            <field name="equipment_id"
+                                   invisible="alerte_type != 'warranty'"/>
+                            <field name="contract_id"
+                                   invisible="alerte_type != 'contract'"/>
+                        </group>
+                        <group>
+                            <field name="date_echeance"/>
+                            <field name="days_left" readonly="1"/>
+                            <field name="threshold_days"/>
+                        </group>
+                    </group>
+                    <field name="notes"/>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_it_alerte_search" model="ir.ui.view">
+        <field name="name">it.alerte.search</field>
+        <field name="model">it.alerte</field>
+        <field name="arch" type="xml">
+            <search string="Rechercher une alerte">
+                <field name="name"/>
+                <field name="equipment_id"/>
+                <field name="contract_id"/>
+                <separator/>
+                <filter name="filter_open" string="Ouvertes"
+                        domain="[('state','=','open')]"/>
+                <filter name="filter_acknowledged" string="Prises en compte"
+                        domain="[('state','=','acknowledged')]"/>
+                <filter name="filter_closed" string="Fermées"
+                        domain="[('state','=','closed')]"/>
+                <separator/>
+                <filter name="filter_warranty" string="Garanties"
+                        domain="[('alerte_type','=','warranty')]"/>
+                <filter name="filter_contract" string="Contrats"
+                        domain="[('alerte_type','=','contract')]"/>
+                <group expand="0" string="Regrouper par">
+                    <filter name="group_type" string="Type"
+                            context="{'group_by': 'alerte_type'}"/>
+                    <filter name="group_state" string="Statut"
+                            context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_it_alerte" model="ir.actions.act_window">
+        <field name="name">Alertes</field>
+        <field name="res_model">it.alerte</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_it_alerte_search"/>
+        <field name="context">{'search_default_filter_open': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Aucune alerte active
+            </p>
+            <p>Les alertes sont générées automatiquement par la tâche planifiée.</p>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_it_assignment_list" model="ir.ui.view">
+        <field name="name">it.assignment.list</field>
+        <field name="model">it.assignment</field>
+        <field name="arch" type="xml">
+            <list string="Affectations">
+                <field name="equipment_id"/>
+                <field name="employee_id"/>
+                <field name="department_id"/>
+                <field name="date_from"/>
+                <field name="date_to"/>
+                <field name="duration_days"/>
+                <field name="motif"/>
+                <field name="active" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_it_assignment_form" model="ir.ui.view">
+        <field name="name">it.assignment.form</field>
+        <field name="model">it.assignment</field>
+        <field name="arch" type="xml">
+            <form string="Affectation">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="equipment_id"/>
+                            <field name="employee_id"/>
+                            <field name="department_id"/>
+                        </group>
+                        <group>
+                            <field name="date_from"/>
+                            <field name="date_to"/>
+                            <field name="duration_days" readonly="1"/>
+                            <field name="motif"/>
+                        </group>
+                    </group>
+                    <field name="notes"/>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_it_assignment_search" model="ir.ui.view">
+        <field name="name">it.assignment.search</field>
+        <field name="model">it.assignment</field>
+        <field name="arch" type="xml">
+            <search string="Rechercher une affectation">
+                <field name="equipment_id"/>
+                <field name="employee_id"/>
+                <field name="department_id"/>
+                <filter name="filter_active" string="Actives"
+                        domain="[('date_to','=',False)]"/>
+                <group expand="0" string="Regrouper par">
+                    <filter name="group_employee" string="Employé"
+                            context="{'group_by': 'employee_id'}"/>
+                    <filter name="group_department" string="Département"
+                            context="{'group_by': 'department_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_it_assignment" model="ir.actions.act_window">
+        <field name="name">Historique affectations</field>
+        <field name="res_model">it.assignment</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_it_assignment_search"/>
+        <field name="context">{'search_default_filter_active': 1}</field>
+    </record>
+</odoo>

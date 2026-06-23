@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_it_contract_list" model="ir.ui.view">
+        <field name="name">it.contract.list</field>
+        <field name="model">it.contract</field>
+        <field name="arch" type="xml">
+            <list string="Contrats fournisseurs"
+                  decoration-danger="is_expired == True"
+                  decoration-warning="days_left &lt;= 30 and not is_expired">
+                <field name="reference"/>
+                <field name="name"/>
+                <field name="contract_type" widget="badge"/>
+                <field name="supplier_id"/>
+                <field name="date_start"/>
+                <field name="date_end"/>
+                <field name="days_left"/>
+                <field name="is_expired" column_invisible="True"/>
+                <field name="amount"/>
+                <field name="state" widget="badge"
+                    decoration-success="state == 'active'"
+                    decoration-warning="state == 'expiring_soon'"
+                    decoration-danger="state == 'expired'"/>
+                <field name="equipment_count" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_it_contract_form" model="ir.ui.view">
+        <field name="name">it.contract.form</field>
+        <field name="model">it.contract</field>
+        <field name="arch" type="xml">
+            <form string="Contrat fournisseur">
+                <header>
+                    <button name="action_renew" string="Renouveler le contrat"
+                            type="object" class="btn-primary"
+                            groups="it_parc.group_it_manager"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="active,expiring_soon,expired"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="Intitulé du contrat"/></h1>
+                        <h3 class="text-muted"><field name="reference" readonly="1"/></h3>
+                    </div>
+
+                    <group>
+                        <group string="Informations contrat">
+                            <field name="contract_type"/>
+                            <field name="supplier_id"/>
+                            <field name="amount"/>
+                        </group>
+                        <group string="Période de validité">
+                            <field name="date_start"/>
+                            <field name="date_end"/>
+                            <field name="days_left" readonly="1"
+                                   decoration-danger="is_expired"
+                                   decoration-warning="days_left &lt;= 30 and not is_expired"/>
+                            <field name="is_expired" readonly="1" widget="boolean_toggle"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Équipements couverts" name="equipments">
+                            <field name="equipment_ids">
+                                <list>
+                                    <field name="reference"/>
+                                    <field name="name"/>
+                                    <field name="category_id"/>
+                                    <field name="serial_number"/>
+                                    <field name="state" widget="badge"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Notes" name="notes">
+                            <field name="notes"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_it_contract_search" model="ir.ui.view">
+        <field name="name">it.contract.search</field>
+        <field name="model">it.contract</field>
+        <field name="arch" type="xml">
+            <search string="Rechercher un contrat">
+                <field name="name"/>
+                <field name="reference"/>
+                <field name="supplier_id"/>
+                <separator/>
+                <filter name="filter_active" string="Actifs"
+                        domain="[('state','=','active')]"/>
+                <filter name="filter_expiring" string="Expire bientôt"
+                        domain="[('state','=','expiring_soon')]"/>
+                <filter name="filter_expired" string="Expirés"
+                        domain="[('state','=','expired')]"/>
+                <separator/>
+                <filter name="filter_60days" string="Expire dans 60j"
+                        domain="[('days_left','&lt;=',60),('days_left','&gt;=',0)]"/>
+                <group expand="0" string="Regrouper par">
+                    <filter name="group_type" string="Type"
+                            context="{'group_by': 'contract_type'}"/>
+                    <filter name="group_supplier" string="Fournisseur"
+                            context="{'group_by': 'supplier_id'}"/>
+                    <filter name="group_state" string="Statut"
+                            context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_it_contract" model="ir.actions.act_window">
+        <field name="name">Contrats fournisseurs</field>
+        <field name="res_model">it.contract</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_it_contract_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Aucun contrat enregistré
+            </p>
+            <p>Créez votre premier contrat fournisseur.</p>
+        </field>
+    </record>
+
+    <!-- Action serveur : Export Excel contrats expirants (depuis liste contrats) -->
+    <record id="action_server_export_contracts" model="ir.actions.server">
+        <field name="name">Exporter contrats expirants Excel</field>
+        <field name="model_id" ref="model_it_contract"/>
+        <field name="binding_model_id" ref="model_it_contract"/>
+        <field name="binding_type">action</field>
+        <field name="state">code</field>
+        <field name="code">
+action = {
+    'type': 'ir.actions.act_window',
+    'name': 'Export Excel Contrats expirants',
+    'res_model': 'it.export.wizard',
+    'view_mode': 'form',
+    'target': 'new',
+    'context': {'default_export_type': 'expiring_contracts'},
+}
+        </field>
+        <field name="groups_id" eval="[(4, ref('it_parc.group_it_manager'))]"/>
+    </record>
+</odoo>
