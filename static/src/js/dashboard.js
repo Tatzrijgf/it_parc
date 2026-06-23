@@ -249,7 +249,7 @@ class ItParcDashboard extends Component {
             type: "ir.actions.act_window",
             name: "Équipements",
             res_model: "it.equipment",
-            view_mode: "list,kanban,form",
+            views: [[false, "list"], [false, "kanban"], [false, "form"]],
             domain,
         });
     }
@@ -259,7 +259,7 @@ class ItParcDashboard extends Component {
             type: "ir.actions.act_window",
             name: "Alertes ouvertes",
             res_model: "it.alerte",
-            view_mode: "list,form",
+            views: [[false, "list"], [false, "form"]],
             domain: [["state", "=", "open"]],
         });
     }
@@ -269,7 +269,7 @@ class ItParcDashboard extends Component {
             type: "ir.actions.act_window",
             name: "Contrats expirant bientôt",
             res_model: "it.contract",
-            view_mode: "list,form",
+            views: [[false, "list"], [false, "form"]],
             domain: [["days_left", "<=", 30], ["days_left", ">=", 0]],
         });
     }
@@ -279,7 +279,7 @@ class ItParcDashboard extends Component {
             type: "ir.actions.act_window",
             name: "Interventions",
             res_model: "it.intervention",
-            view_mode: "list,calendar,form",
+            views: [[false, "list"], [false, "calendar"], [false, "form"]],
         });
     }
 }
