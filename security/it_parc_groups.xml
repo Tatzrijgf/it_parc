@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Catégorie de module -->
+        <record id="module_it_parc" model="ir.module.category">
+            <field name="name">IT Parc</field>
+            <field name="description">Gestion du parc informatique</field>
+            <field name="sequence">100</field>
+        </record>
+
+        <!-- Groupe : IT Technicien -->
+        <record id="group_it_technicien" model="res.groups">
+            <field name="name">IT Technicien</field>
+            <field name="category_id" ref="module_it_parc"/>
+            <field name="comment">Lecture des équipements, création et gestion des interventions.</field>
+        </record>
+
+        <!-- Groupe : IT Manager (hérite du technicien) -->
+        <record id="group_it_manager" model="res.groups">
+            <field name="name">IT Manager</field>
+            <field name="category_id" ref="module_it_parc"/>
+            <field name="implied_ids" eval="[(4, ref('group_it_technicien'))]"/>
+            <field name="comment">Accès complet : équipements, contrats, alertes, rapports, imports, exports.</field>
+        </record>
+    </data>
+</odoo>

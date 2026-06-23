@@ -1,0 +1,20 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_it_equipment_category_tech,it.equipment.category technicien,model_it_equipment_category,it_parc.group_it_technicien,1,0,0,0
+access_it_equipment_category_mgr,it.equipment.category manager,model_it_equipment_category,it_parc.group_it_manager,1,1,1,1
+access_it_equipment_tech,it.equipment technicien,model_it_equipment,it_parc.group_it_technicien,1,0,0,0
+access_it_equipment_mgr,it.equipment manager,model_it_equipment,it_parc.group_it_manager,1,1,1,1
+access_it_assignment_tech,it.assignment technicien,model_it_assignment,it_parc.group_it_technicien,1,0,0,0
+access_it_assignment_mgr,it.assignment manager,model_it_assignment,it_parc.group_it_manager,1,1,1,1
+access_it_intervention_tech,it.intervention technicien,model_it_intervention,it_parc.group_it_technicien,1,1,1,0
+access_it_intervention_mgr,it.intervention manager,model_it_intervention,it_parc.group_it_manager,1,1,1,1
+access_it_contract_tech,it.contract technicien,model_it_contract,it_parc.group_it_technicien,1,0,0,0
+access_it_contract_mgr,it.contract manager,model_it_contract,it_parc.group_it_manager,1,1,1,1
+access_it_alerte_tech,it.alerte technicien,model_it_alerte,it_parc.group_it_technicien,1,1,0,0
+access_it_alerte_mgr,it.alerte manager,model_it_alerte,it_parc.group_it_manager,1,1,1,1
+access_it_reassign_wizard_tech,it.reassign.wizard technicien,model_it_reassign_wizard,it_parc.group_it_technicien,1,1,1,1
+access_it_reassign_wizard_mgr,it.reassign.wizard manager,model_it_reassign_wizard,it_parc.group_it_manager,1,1,1,1
+access_it_contract_renew_wizard_mgr,it.contract.renew.wizard manager,model_it_contract_renew_wizard,it_parc.group_it_manager,1,1,1,1
+access_it_alert_scan_wizard_tech,it.alert.scan.wizard technicien,model_it_alert_scan_wizard,it_parc.group_it_technicien,1,1,1,1
+access_it_alert_scan_wizard_mgr,it.alert.scan.wizard manager,model_it_alert_scan_wizard,it_parc.group_it_manager,1,1,1,1
+access_it_import_csv_wizard_mgr,it.import.csv.wizard manager,model_it_import_csv_wizard,it_parc.group_it_manager,1,1,1,1
+access_it_export_wizard_mgr,it.export.wizard manager,model_it_export_wizard,it_parc.group_it_manager,1,1,1,1

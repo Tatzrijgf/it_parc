@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!--
+            Les techniciens voient tous les équipements et interventions
+            (règle globale : pas de restriction par société ou utilisateur).
+            Les managers ont accès complet sans restriction.
+            On définit ici des règles de base pour la multi-société si besoin futur.
+        -->
+
+        <!-- Règle : Technicien - lecture seule sur les équipements -->
+        <record id="rule_it_equipment_technicien" model="ir.rule">
+            <field name="name">IT Équipement : Technicien lecture</field>
+            <field name="model_id" ref="model_it_equipment"/>
+            <field name="groups" eval="[(4, ref('it_parc.group_it_technicien'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+        </record>
+
+        <!-- Règle : Manager - accès total équipements -->
+        <record id="rule_it_equipment_manager" model="ir.rule">
+            <field name="name">IT Équipement : Manager accès complet</field>
+            <field name="model_id" ref="model_it_equipment"/>
+            <field name="groups" eval="[(4, ref('it_parc.group_it_manager'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+        </record>
+
+        <!-- Règle : Technicien - accès à ses propres interventions + toutes en lecture -->
+        <record id="rule_it_intervention_technicien" model="ir.rule">
+            <field name="name">IT Intervention : Technicien</field>
+            <field name="model_id" ref="model_it_intervention"/>
+            <field name="groups" eval="[(4, ref('it_parc.group_it_technicien'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+        </record>
+
+        <!-- Règle : Manager - accès total interventions -->
+        <record id="rule_it_intervention_manager" model="ir.rule">
+            <field name="name">IT Intervention : Manager accès complet</field>
+            <field name="model_id" ref="model_it_intervention"/>
+            <field name="groups" eval="[(4, ref('it_parc.group_it_manager'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+        </record>
+    </data>
+</odoo>
