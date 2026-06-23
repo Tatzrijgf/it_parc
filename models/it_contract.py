@@ -104,6 +104,8 @@ class ItContract(models.Model):
         """Calcule le statut à partir de la date d'expiration."""
         if not date_end:
             return 'active'
+        # date_end peut être une chaîne (XML demo) ou un objet date – on normalise
+        date_end = fields.Date.to_date(date_end)
         delta = (date_end - fields.Date.today()).days
         if delta < 0:
             return 'expired'

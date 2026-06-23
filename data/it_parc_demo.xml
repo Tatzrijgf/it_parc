@@ -207,10 +207,31 @@
             <field name="state">retired</field>
         </record>
 
+        <!-- ── Fournisseurs ────────────────────────────────────────────────── -->
+        <record id="supplier_dell" model="res.partner">
+            <field name="name">Dell Technologies Côte d'Ivoire</field>
+            <field name="is_company" eval="True"/>
+            <field name="supplier_rank">1</field>
+            <field name="email">contact@dell-ci.com</field>
+        </record>
+        <record id="supplier_microsoft" model="res.partner">
+            <field name="name">Microsoft Afrique de l'Ouest</field>
+            <field name="is_company" eval="True"/>
+            <field name="supplier_rank">1</field>
+            <field name="email">contact@microsoft-ao.com</field>
+        </record>
+        <record id="supplier_cisco" model="res.partner">
+            <field name="name">Cisco Systems Côte d'Ivoire</field>
+            <field name="is_company" eval="True"/>
+            <field name="supplier_rank">1</field>
+            <field name="email">contact@cisco-ci.com</field>
+        </record>
+
         <!-- ── Contrats (3) ───────────────────────────────────────────────── -->
         <record id="contract_001" model="it.contract">
             <field name="name">Contrat maintenance serveurs Dell</field>
             <field name="contract_type">maintenance</field>
+            <field name="supplier_id" ref="supplier_dell"/>
             <field name="date_start">2024-01-01</field>
             <field name="date_end">2026-07-15</field>
             <field name="amount">2400000</field>
@@ -220,6 +241,7 @@
         <record id="contract_002" model="it.contract">
             <field name="name">Licence Microsoft 365 Business</field>
             <field name="contract_type">license</field>
+            <field name="supplier_id" ref="supplier_microsoft"/>
             <field name="date_start">2025-01-01</field>
             <field name="date_end">2025-12-31</field>
             <field name="amount">3600000</field>
@@ -228,6 +250,7 @@
         <record id="contract_003" model="it.contract">
             <field name="name">Support Cisco SmartNet</field>
             <field name="contract_type">support</field>
+            <field name="supplier_id" ref="supplier_cisco"/>
             <field name="date_start">2023-06-01</field>
             <field name="date_end">2026-08-01</field>
             <field name="amount">850000</field>

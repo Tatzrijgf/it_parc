@@ -81,42 +81,40 @@
                 <field name="warranty_days_left"/>
                 <field name="intervention_count"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div class="oe_kanban_card oe_kanban_global_click">
-                            <div class="o_kanban_record_top">
-                                <div class="o_kanban_record_headings">
-                                    <strong class="o_kanban_record_title">
-                                        <field name="name"/>
-                                    </strong>
-                                    <small class="o_kanban_record_subtitle text-muted">
-                                        <field name="reference"/>
-                                    </small>
-                                </div>
+                    <t t-name="card" class="flex-column">
+                        <div class="o_kanban_record_top">
+                            <div class="o_kanban_record_headings">
+                                <strong class="o_kanban_record_title">
+                                    <field name="name"/>
+                                </strong>
+                                <small class="o_kanban_record_subtitle text-muted">
+                                    <field name="reference"/>
+                                </small>
                             </div>
-                            <div class="o_kanban_record_body">
-                                <div><i class="fa fa-tag me-1"/><field name="category_id"/></div>
-                                <div t-if="record.employee_id.value">
-                                    <i class="fa fa-user me-1"/><field name="employee_id"/>
-                                </div>
-                                <div t-if="record.serial_number.value">
-                                    <i class="fa fa-barcode me-1"/><field name="serial_number"/>
-                                </div>
+                        </div>
+                        <div class="o_kanban_record_body">
+                            <div><i class="fa fa-tag me-1" title="Catégorie"/><field name="category_id"/></div>
+                            <div t-if="record.employee_id.value">
+                                <i class="fa fa-user me-1" title="Employé"/><field name="employee_id"/>
                             </div>
-                            <div class="o_kanban_record_bottom">
-                                <div class="oe_kanban_bottom_left">
-                                    <span t-if="record.warranty_expired.value"
-                                          class="badge bg-danger">Garantie expirée</span>
-                                    <span t-elif="record.warranty_days_left.value &lt;= 30 and record.warranty_days_left.value > 0"
-                                          class="badge bg-warning">
-                                        <t t-esc="record.warranty_days_left.value"/> j
-                                    </span>
-                                </div>
-                                <div class="oe_kanban_bottom_right">
-                                    <span class="badge bg-info">
-                                        <i class="fa fa-wrench"/>
-                                        <t t-esc="record.intervention_count.value"/>
-                                    </span>
-                                </div>
+                            <div t-if="record.serial_number.value">
+                                <i class="fa fa-barcode me-1" title="N° série"/><field name="serial_number"/>
+                            </div>
+                        </div>
+                        <div class="o_kanban_record_bottom">
+                            <div class="oe_kanban_bottom_left">
+                                <span t-if="record.warranty_expired.value"
+                                      class="badge bg-danger">Garantie expirée</span>
+                                <span t-elif="record.warranty_days_left.value &lt;= 30 and record.warranty_days_left.value &gt; 0"
+                                      class="badge bg-warning">
+                                    <t t-esc="record.warranty_days_left.value"/> j
+                                </span>
+                            </div>
+                            <div class="oe_kanban_bottom_right">
+                                <span class="badge bg-info">
+                                    <i class="fa fa-wrench" title="Interventions"/>
+                                    <t t-esc="record.intervention_count.value"/>
+                                </span>
                             </div>
                         </div>
                     </t>
