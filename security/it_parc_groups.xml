@@ -20,6 +20,7 @@
             <field name="name">IT Manager</field>
             <field name="category_id" ref="module_it_parc"/>
             <field name="implied_ids" eval="[(4, ref('group_it_technicien'))]"/>
+            <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
             <field name="comment">Accès complet : équipements, contrats, alertes, rapports, imports, exports.</field>
         </record>
     </data>

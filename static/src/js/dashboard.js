@@ -12,7 +12,8 @@ class ItParcDashboard extends Component {
     static template = "it_parc.Dashboard";
 
     setup() {
-        this.rpc = useService("rpc");
+        // ✅ Odoo 18 : "rpc" remplacé par "orm" + fetch natif pour les routes custom
+        this.orm = useService("orm");
         this.action = useService("action");
         this.notification = useService("notification");
 
@@ -28,31 +29,48 @@ class ItParcDashboard extends Component {
         this.pieChartRef = useRef("pieChart");
         this.barChartRef = useRef("barChart");
 
-        // Chargement initial des données avant le rendu
         onWillStart(async () => {
             await this._loadData();
         });
 
-        // Premier rendu : tracer les graphiques une fois le DOM disponible
         onMounted(() => {
             if (!this.state.loading && !this.state.error) {
                 this._renderCharts();
             }
         });
 
-        // Re-tracer si les données ont changé après un refresh
         onPatched(() => {
             if (this.state.chartsReady) {
-                this.state.chartsReady = false;  // reset avant render pour éviter boucle
+                this.state.chartsReady = false;
                 this._renderCharts();
             }
         });
     }
 
-    // ── Chargement des données via JSON-RPC ─────────────────────────────────
+    // ── Chargement des données via fetch (remplace this.rpc en Odoo 18) ────
     async _loadData() {
         try {
-            const data = await this.rpc("/it_parc/dashboard_data", {});
+            const response = await fetch("/it_parc/dashboard_data", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-Requested-With": "XMLHttpRequest",
+                },
+                body: JSON.stringify({ jsonrpc: "2.0", method: "call", params: {} }),
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}`);
+            }
+
+            const json = await response.json();
+
+            // Odoo JSON-RPC renvoie { result: {...} } ou { error: {...} }
+            if (json.error) {
+                throw new Error(json.error.data?.message || json.error.message);
+            }
+
+            const data = json.result || {};
             this.state.kpis = data.kpis || {};
             this.state.charts = data.charts || { by_category: [], monthly_costs: [] };
             this.state.top_equipments = data.top_equipments || [];
@@ -160,7 +178,6 @@ class ItParcDashboard extends Component {
 
         let svg = "";
 
-        // Grille horizontale (5 niveaux)
         for (let i = 0; i <= 4; i++) {
             const y = pt + chartH - (i / 4) * chartH;
             const val = (maxVal * i) / 4;
@@ -172,7 +189,6 @@ class ItParcDashboard extends Component {
                     </text>`;
         }
 
-        // Barres
         data.forEach((item, i) => {
             const barH = maxVal > 0 ? (item.value / maxVal) * chartH : 0;
             const x = pl + i * step + (step - barW) / 2;
@@ -201,7 +217,6 @@ class ItParcDashboard extends Component {
                     </text>`;
         });
 
-        // Axes
         svg += `<line x1="${pl}" y1="${pt}" x2="${pl}" y2="${pt + chartH}"
                       stroke="#bbb" stroke-width="1.5"/>`;
         svg += `<line x1="${pl}" y1="${pt + chartH}" x2="${W - 5}" y2="${pt + chartH}"
